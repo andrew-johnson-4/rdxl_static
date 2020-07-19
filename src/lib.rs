@@ -1,4 +1,4 @@
-pub use rdxl_static_macros::dot_html;
+pub use rdxl_static_macros::*;
 
 pub struct DotHtml {
    filepath: String,
