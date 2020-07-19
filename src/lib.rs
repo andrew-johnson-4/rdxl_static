@@ -1,7 +1,6 @@
 pub use rdxl_static_macros::*;
 
 pub struct DotHtml {
-   filepath: String,
    content: String,
 }
 
