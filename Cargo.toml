@@ -1,6 +1,6 @@
 [package]
 name = "rdxl_static"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Andrew <andrew@subarctic.org>"]
 license = "MIT OR Apache-2.0"
 description = "Static Site Generation Utilities for RDXL"
@@ -12,3 +12,7 @@ keywords = ["static","website","generation"]
 [dependencies]
 rdxl = "0.5"
 rdxl_static_macros = "0.0.3"
+
+[dependencies.syn]
+version = "1.0"
+features = ["full"]
