@@ -11,3 +11,4 @@ keywords = ["static","website","generation"]
 
 [dependencies]
 rdxl = "0.5"
+rdxl_static_macros = "0.0.1"
