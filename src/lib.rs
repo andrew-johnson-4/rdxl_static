@@ -13,6 +13,7 @@ pub struct DotLhs {
 }
 
 fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
+    use std::io::Read;
     let mut dots = Vec::new();
     if dir.is_dir() {
         for entry in std::fs::read_dir(dir)? {
@@ -21,7 +22,11 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
             if path.is_dir() {
                 build_dirs(&path)?;
             } else {
-                let _syntax = syn::parse_file(&path.to_str().unwrap_or("[non-unicode pathname]"))
+                let mut file = std::fs::File::open(&path).expect(&format!("Unable to open file: {:?}", path));
+                let mut src = String::new();
+                file.read_to_string(&mut src).expect(&format!("Unable to read file: {:?}", path));
+
+                let _syntax = syn::parse_file(&src)
                              .expect(&format!("Unable to parse file: {:?}", path));
                 println!("extract dots from file: {:?}", path);
                 //extract dots from file
