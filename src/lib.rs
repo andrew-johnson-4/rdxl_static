@@ -1,7 +1,7 @@
 pub use rdxl_static_macros::*;
 
 pub struct DotHtml {
-   content: String,
+   pub content: String,
 }
 
 pub enum Dot {
@@ -9,7 +9,7 @@ pub enum Dot {
 }
 
 pub struct DotLhs {
-   filepath: String,
+   pub filepath: String,
 }
 
 fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
