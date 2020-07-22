@@ -12,6 +12,14 @@ pub struct DotLhs {
    pub filepath: String,
 }
 
+pub fn url_from_path_parts(p: &std::path::Path, i: String, dot: String) -> String {
+   let p = format!("{:?}", p);
+   let pl = p.find("/").unwrap();
+   let pr = p.find("/").unwrap();
+   let p = p[pl..pr+1].to_string();
+   format!("{}{}.{}", p, i, dot)
+}
+
 fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
     use std::io::Read;
     let mut dots = Vec::new();
@@ -38,10 +46,8 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
                          }
                       }
                       if is_dot {
-                         let mut path = path.clone();
-                         path.pop(); //ignore filename
-                         let mut path = path.strip_prefix("src").unwrap(); //src directory becomes / base url
-                         println!("cargo:warning=dot-fn {:?}{}.{}", path, f.sig.ident.to_string(), "html");
+                         let u = url_from_path_parts(&path, f.sig.ident.to_string(), "html".to_string());
+                         println!("cargo:warning=dot-fn {}", u);
                       }
                    }
                 }
