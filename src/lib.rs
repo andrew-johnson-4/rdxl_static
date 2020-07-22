@@ -38,7 +38,10 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
                          }
                       }
                       if is_dot {
-                         println!("cargo:warning=dot-fn {:?}::{}", path, f.sig.ident.to_string());
+                         let mut path = path.clone();
+                         path.pop(); //ignore filename
+                         let mut path = path.strip_prefix("src").unwrap(); //src directory becomes / base url
+                         println!("cargo:warning=dot-fn {:?}{}.{}", path, f.sig.ident.to_string(), "html");
                       }
                    }
                 }
