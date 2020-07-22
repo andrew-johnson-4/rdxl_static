@@ -80,10 +80,10 @@ pub fn build() {
    let dots = build_dirs(&std::path::Path::new("src")).expect("could not extract dots from source directory");
 
    let mut site = std::fs::File::create("src/site.rs").expect("could not create src/site.rs");
-   std::io::Write::write_all(&mut site, b"pub fn run() {\n").unwrap();
+   std::io::Write::write_all(&mut site, "pub fn run() {\n".as_bytes()).unwrap();
    for (u,cf) in dots.iter() {
-      std::io::Write::write_all(&mut site, format!(r#"\trdxl_static::dot_to_file("{}",{}().content).unwrap();\n"#,u,cf).as_bytes()).unwrap();
+      std::io::Write::write_all(&mut site, format!("\trdxl_static::dot_to_file(\"{}\",{}().content).unwrap();\n",u,cf).as_bytes()).unwrap();
       println!("cargo:warning=dot-fn {} {}", u, cf);
    }
-   std::io::Write::write_all(&mut site, b"}\n").unwrap();
+   std::io::Write::write_all(&mut site, "}\n".as_bytes()).unwrap();
 }
