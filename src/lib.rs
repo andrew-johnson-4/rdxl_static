@@ -19,8 +19,15 @@ pub fn url_from_path_parts(p: &std::path::Path, i: String, dot: String) -> Strin
    let p = p[pl..pr+1].to_string();
    format!("{}{}.{}", p, i, dot)
 }
+pub fn fn_from_path_parts(p: &std::path::Path, i: String) -> String {
+   let p = format!("{:?}", p);
+   let pl = p.find("/").unwrap();
+   let pr = p.find("/").unwrap();
+   let p = p[pl..pr+1].to_string().replace("/","::");
+   format!("crate{}{}", p, i)
+}
 
-fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
+fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(String,String)>> {
     use std::io::Read;
     let mut dots = Vec::new();
     if dir.is_dir() {
@@ -28,7 +35,7 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
             let entry = entry?;
             let path = entry.path();
             if path.is_dir() {
-                build_dirs(&path)?;
+                dots.append(&mut build_dirs(&path)?);
             } else {
                 let mut file = std::fs::File::open(&path).expect(&format!("Unable to open file: {:?}", path));
                 let mut src = String::new();
@@ -47,12 +54,11 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
                       }
                       if is_dot {
                          let u = url_from_path_parts(&path, f.sig.ident.to_string(), "html".to_string());
-                         println!("cargo:warning=dot-fn {}", u);
+                         let cf = fn_from_path_parts(&path, f.sig.ident.to_string());
+                         dots.push((u, cf));
                       }
                    }
                 }
-                println!("cargo:warning=extract dots from file: {:?}", path);
-                //extract dots from file
             }
         }
     }
@@ -60,6 +66,11 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
 }
 
 pub fn build() {
-   let _dots = build_dirs(&std::path::Path::new("src")).expect("could not extract dots from source directory");
+   let dots = build_dirs(&std::path::Path::new("src")).expect("could not extract dots from source directory");
+
+   for (u,cf) in dots.iter() {
+      println!("cargo:warning=dot-fn {} {}", u, cf);
+   }
+
    std::fs::File::create("src/site.rs").expect("could not create src/site.rs");
 }
