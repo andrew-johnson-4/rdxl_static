@@ -31,7 +31,15 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
 
                 for i in file_content.items.iter() {
                    if let syn::Item::Fn(f) = i {
-                      println!("cargo:warning=maybe dot-fn {}", f.sig.ident.to_string());
+                      let mut is_dot = false;
+                      for at in f.attrs.iter() {
+                         if at.path.is_ident("dot") {
+                            is_dot = true;
+                         }
+                      }
+                      if is_dot {
+                         println!("cargo:warning=dot-fn {:?}::{}", path, f.sig.ident.to_string());
+                      }
                    }
                 }
                 println!("cargo:warning=extract dots from file: {:?}", path);
