@@ -82,7 +82,7 @@ pub fn build() {
    let mut site = std::fs::File::create("src/site.rs").expect("could not create src/site.rs");
    std::io::Write::write_all(&mut site, "pub fn run() {\n".as_bytes()).unwrap();
    for (u,cf) in dots.iter() {
-      std::io::Write::write_all(&mut site, format!("    rdxl_static::dot_to_file(\"{}\",&{}().content).unwrap();\n",u,cf).as_bytes()).unwrap();
+      std::io::Write::write_all(&mut site, format!("    rdxl_static::dot_to_file(\"{}\",&{}()).unwrap();\n",u,cf).as_bytes()).unwrap();
       println!("cargo:warning=dot-fn {} {}", u, cf);
    }
    std::io::Write::write_all(&mut site, "}\n".as_bytes()).unwrap();
