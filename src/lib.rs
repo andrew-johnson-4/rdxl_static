@@ -26,8 +26,14 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(DotLhs,Dot)>> {
                 let mut src = String::new();
                 file.read_to_string(&mut src).expect(&format!("Unable to read file: {:?}", path));
 
-                let _syntax = syn::parse_file(&src)
-                             .expect(&format!("Unable to parse file: {:?}", path));
+                let file_content = syn::parse_file(&src)
+                                   .expect(&format!("Unable to parse file: {:?}", path));
+
+                for i in file_content.items.iter() {
+                   if let syn::Item::Fn(f) = i {
+                      println!("maybe dot-fn {}", f.sig.ident.to_string());
+                   }
+                }
                 println!("extract dots from file: {:?}", path);
                 //extract dots from file
             }
