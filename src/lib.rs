@@ -7,9 +7,27 @@ pub struct DotHtml {
 pub enum Dot {
    Html(DotHtml)
 }
+impl Dot {
+   pub fn content(&self) -> String {
+      match self {
+         Dot::Html(dh) => { dh.content.clone() },
+      }
+   }
+}
 
 pub struct DotLhs {
    pub filepath: String,
+}
+
+pub fn dot_to_file(cf: &str, dat: &str) -> std::io::Result<()> {
+   let p = format!("www{}", cf);
+   let pr = p.rfind("/").unwrap();
+   let pd = p[..pr].to_string();
+   let p = std::path::Path::new(&p);
+   std::fs::create_dir_all(pd)?;
+   let mut f = std::fs::File::create(p)?;
+   std::io::Write::write_all(&mut f, dat.as_bytes())?;
+   Ok(())
 }
 
 pub fn url_from_path_parts(p: &std::path::Path, i: String, dot: String) -> String {
@@ -68,9 +86,11 @@ fn build_dirs(dir: &std::path::Path) -> std::io::Result<Vec<(String,String)>> {
 pub fn build() {
    let dots = build_dirs(&std::path::Path::new("src")).expect("could not extract dots from source directory");
 
+   let mut site = std::fs::File::create("src/site.rs").expect("could not create src/site.rs");
+   std::io::Write::write_all(&mut site, b"pub fn run() {").unwrap();
    for (u,cf) in dots.iter() {
+      std::io::Write::write_all(&mut site, format!(r#"rdxl_static::dot_to_file("{}",{}().content())"#,u,cf).as_bytes()).unwrap();
       println!("cargo:warning=dot-fn {} {}", u, cf);
    }
-
-   std::fs::File::create("src/site.rs").expect("could not create src/site.rs");
+   std::io::Write::write_all(&mut site, b"}").unwrap();
 }
