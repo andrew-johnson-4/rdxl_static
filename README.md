@@ -2,17 +2,30 @@
 Utility Crate to Compile Static Sites based on RDXL macros
 
 ```rust
+#[dot_template]
+pub fn custom_template(title: String, description: String, xhtml: String) -> String {
+   xhtml!(
+     <html>
+       <head>
+         <title>{{ title }}</title>
+         <meta name="description" content={{description}}/>
+       </head>
+       <body>{{ xhtml }}</body>
+     </html>
+   )
+}
+
 #[dot]
-fn this_function_is_a_webpage() -> DotHtml {
+fn this_function_is_a_webpage() -> String {
    dot_html!(
       <p>This webpage uses the default HTML Template.</p>
    )
 }
 
 #[dot]
-fn this_function_is_also_a_webpage() -> DotHtml {
+fn this_function_is_also_a_webpage() -> String {
    dot_html!(
-      template="other_template.html",
+      template=custom_template,
       title="Hello World",
       description="Classic Cinematic Drama Movie Reviews",
       <p>This year was not a good year for Cinema.</p>
