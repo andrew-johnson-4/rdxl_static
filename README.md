@@ -19,3 +19,5 @@ fn this_function_is_also_a_webpage() -> DotHtml {
    )
 }
 ```
+
+There is a [template for starting new sites](https://github.com/andrew-johnson-4/rdxl_static_template) with rdxl_static.
