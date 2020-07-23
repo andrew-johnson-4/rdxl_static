@@ -1,4 +1,10 @@
 # rdxl_static
+
+[![Crates.IO](https://img.shields.io/crates/v/rdxl_static.svg)](https://crates.rs/crates/rdxl_static)
+[![Documentation](https://img.shields.io/badge/api-rustdoc-blue.svg)](https://docs.rs/rdxl_static/)
+[![Build Nightly](https://github.com/andrew-johnson-4/rdxl_static/workflows/BuildNightly/badge.svg)](https://github.com/andrew-johnson-4/rdxl_static)
+[![Build](https://github.com/andrew-johnson-4/rdxl_static/workflows/Build/badge.svg)](https://github.com/andrew-johnson-4/rdxl_static)
+
 Utility Crate to Compile Static Sites based on RDXL macros
 
 ```rust
